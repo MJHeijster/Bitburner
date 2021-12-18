@@ -1,0 +1,2 @@
+wget https://raw.githubusercontent.com/MJHeijster/Bitburner/master/remote-hack.ns remote-hack.ns
+wget https://raw.githubusercontent.com/MJHeijster/Bitburner/master/hack.ns hack.ns

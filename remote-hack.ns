@@ -5,13 +5,15 @@ export async function main(ns) {
     {
       originServer = "home"
     }
+    ns.tprint("Origin server: "+ originServer)
     const targets = ns.scan();
 
     for (let i = 0; i < targets.length; i++) {
         if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != originServer && targets[i] != "darkweb") {
             var host = targets[i];
+            ns.killall(host)
             //ns.toast("target: " + host, "info");
-            var files = ["hack.ns", "hack-remote.ns"]
+            var files = ["hack.ns", "remote-hack.ns"]
             await ns.scp(files, originServer, host)
             if (!ns.hasRootAccess(host)) {
                 try {
@@ -36,15 +38,13 @@ export async function main(ns) {
                     ns.tprint('Root failed on ', host);
                 }
             }
-            if (ns.isRunning('hack.ns', host)) {
-                ns.scriptKill('hack.ns', host)
-            }
+            
             ns.tprint("Executing hack on: "+ host)
-            await ns.exec('hack-remote.ns', host, 1, originServer);
+            //await ns.exec("remote-hack.ns", host, 1, originServer);
             
             var threads = Math.floor(ns.getServerMaxRam(host) / ns.getScriptRam('hack.ns'))
-            ns.tprint("Host: "+ host +"threads: " + threads)
-            await ns.exec('hack.ns', host, threads, host);
+            ns.tprint("Host: "+ host +" threads: " + threads)
+            await ns.exec("hack.ns", host, threads, host);
         }
     }
 }
