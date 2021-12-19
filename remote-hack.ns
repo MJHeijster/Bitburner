@@ -1,50 +1,32 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    var originServer = ns.args[0];
-    if (!originServer)
-    {
-      originServer = "home"
+    var originServer = "home";
+
+    ns.tprint("args: " + ns.args[0])
+    if (ns.args[0]) {
+        originServer = ns.args[0]
     }
-    ns.tprint("Origin server: "+ originServer)
+    ns.tprint("Origin server: " + originServer)
     const targets = ns.scan();
 
     for (let i = 0; i < targets.length; i++) {
+        ns.tprint("Target: " + targets[i])
         if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != originServer && targets[i] != "darkweb") {
-            var host = targets[i];
-            ns.killall(host)
-            //ns.toast("target: " + host, "info");
-            var files = ["hack.ns", "remote-hack.ns"]
+            var files = ["hack.ns", "remote-hack.ns", "kill-nuke.ns"]
             await ns.scp(files, originServer, host)
-            if (!ns.hasRootAccess(host)) {
-                try {
-                    if (ns.fileExists('BruteSSH.exe', 'home')) {
-                    ns.brutessh(host);
-                }
-                if (ns.fileExists('FTPCrack.exe', 'home')) {
-                    ns.ftpcrack(host);
-                }
-                if (ns.fileExists('relaySMTP.exe', 'home')) {
-                    ns.relaysmtp(host);
-                }
-                if (ns.fileExists('HTTPWorm.exe', 'home')) {
-                    ns.httpworm(host);
-                }
-                if (ns.fileExists('SQLInject.exe', 'home')) {
-                    ns.sqlinject(host);
-                }
-                    ns.nuke(host);
-                    ns.tprint('Root enabled on ', host);
-                } catch {
-                    ns.tprint('Root failed on ', host);
+            var host = targets[i];
+            await ns.exec("kill-nuke.ns", originServer, 1, host);
+            if (ns.hasRootAccess(host)) {
+                ns.tprint("Executing remote-hack on: " + host + " threads: " + 1 + " Origin: " + originServer)
+                await ns.exec("remote-hack.ns", host, 1, originServer);
+
+                var threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam('hack.ns'))
+                if (threads > 0) {
+                    await ns.exec("hack.ns", host, threads, "foodnstuff");
+                    ns.tprint("Executing hack.ns on " + host +" using " +threads+ " threads")
+
                 }
             }
-            
-            ns.tprint("Executing hack on: "+ host)
-            //await ns.exec("remote-hack.ns", host, 1, originServer);
-            
-            var threads = Math.floor(ns.getServerMaxRam(host) / ns.getScriptRam('hack.ns'))
-            ns.tprint("Host: "+ host +" threads: " + threads)
-            await ns.exec("hack.ns", host, threads, host);
         }
     }
 }
