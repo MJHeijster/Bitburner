@@ -1,0 +1,21 @@
+/** @param {NS} ns **/
+export async function main(ns) {
+    const targets = ns.scan();
+    var viableTargets = []
+    for (let i = 0; i < targets.length; i++) {
+        if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != "darkweb") {
+            viableTargets.push(targets[i])
+        }
+    }
+    var threads = (Math.floor((ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) / ns.getScriptRam('hack.ns')) / viableTargets.length)
+    for (let i = 0; i < viableTargets.length; i++) {
+        var host = viableTargets[i];
+        if (ns.hasRootAccess(host)) {
+            if (threads > 0) {
+                await ns.exec("hack.ns", "home", threads, host);
+                ns.tprint("Executing hack.ns on " + host + " using " + threads + " threads")
+            }
+        }
+    }
+                ns.tprint("All done!")
+}

@@ -1,32 +1,39 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    var originServer = "home";
-
-    ns.tprint("args: " + ns.args[0])
-    if (ns.args[0]) {
-        originServer = ns.args[0]
-    }
+    var originServer = ns.args[0] || "home";
     ns.tprint("Origin server: " + originServer)
     const targets = ns.scan();
+    var hackableTargets = []
 
     for (let i = 0; i < targets.length; i++) {
         ns.tprint("Target: " + targets[i])
         if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != originServer && targets[i] != "darkweb") {
-            var files = ["hack.ns", "remote-hack.ns", "kill-nuke.ns"]
-            await ns.scp(files, originServer, host)
+            var files = ["hack.ns", "remote-hack.ns", "kill-nuke.ns", "prepare-hack.ns"]
             var host = targets[i];
-            await ns.exec("kill-nuke.ns", originServer, 1, host);
+            await ns.scp(files, originServer, host)
+            
             if (ns.hasRootAccess(host)) {
-                ns.tprint("Executing remote-hack on: " + host + " threads: " + 1 + " Origin: " + originServer)
-                await ns.exec("remote-hack.ns", host, 1, originServer);
-
-                var threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam('hack.ns'))
-                if (threads > 0) {
-                    await ns.exec("hack.ns", host, threads, "foodnstuff");
-                    ns.tprint("Executing hack.ns on " + host +" using " +threads+ " threads")
-
-                }
+        ns.tprint("prepare-hack to: " + host)
+                    await ns.exec("prepare-hack.ns", host, 1, originServer);
+        ns.tprint("remote-hack to: " + host)
+                    await ns.exec("remote-hack.ns", host, 1, originServer);
+        ns.tprint("remote-hack done to: " + host)
+        hackableTargets.push(targets[i])
             }
         }
+    }
+        await ns.sleep(10000) // Make sure remote-hack had the time to go through the network.
+    
+    for (let i = 0; i < hackableTargets.length; i++) {
+            var host = hackableTargets[i];
+                var threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam('hack.ns'))
+                if (threads > 0) {
+                    await ns.exec("hack.ns", host, threads, host);
+                    ns.tprint("Executing hack.ns on " + host +" using " +threads+ " threads")
+                }
+                else {
+                    ns.tprint("Unable to hack " + host +" not enough free RAM: " +ns.getServerUsedRam(host)+ "")
+                    ns.toast("Unable to hack " + host +" not enough free RAM, used: " +ns.getServerUsedRam(host)+ " free: " + ns.getServerMaxRam(host) + " script needed: " +ns.getScriptRam('hack.ns'))
+                }
     }
 }

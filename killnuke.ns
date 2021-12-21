@@ -20,6 +20,8 @@ export async function main(ns) {
                 if (ns.fileExists('SQLInject.exe', 'home')) {
                     ns.sqlinject(host);
                 }
+                }catch {}
+                try{
                     ns.nuke(host);
                     ns.tprint('Root enabled on ', host);
                 } catch {

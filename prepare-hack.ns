@@ -1,0 +1,20 @@
+/** @param {NS} ns **/
+export async function main(ns) {
+    var originServer = ns.args[0] || "home";
+    ns.tprint("Origin server: " + originServer)
+    const targets = ns.scan();
+
+    for (let i = 0; i < targets.length; i++) {
+        ns.tprint("Target: " + targets[i])
+        if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != originServer && targets[i] != "darkweb") {
+            var files = ["hack.ns", "remote-hack.ns", "kill-nuke.ns", "prepare-hack.ns"]
+            await ns.scp(files, originServer, host)
+            var host = targets[i];
+            await ns.exec("kill-nuke.ns", originServer, 1, host);
+            if (ns.hasRootAccess(host)) {
+                ns.tprint("Executing remote-hack on: " + host + " threads: " + 1 + " Origin: " + originServer)
+                await ns.exec("prepare-hack.ns", host, 1, originServer);
+            }
+        }
+    }
+}
