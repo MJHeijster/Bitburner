@@ -1,0 +1,31 @@
+/** @param {NS} ns **/
+export async function main(ns) {
+	var host = ns.args[0];
+    ns.killall(host)
+            //ns.toast("target: " + host, "info");
+            if (!ns.hasRootAccess(host)) {
+                try {
+                    if (ns.fileExists('BruteSSH.exe', 'home')) {
+                    ns.brutessh(host);
+                }
+                if (ns.fileExists('FTPCrack.exe', 'home')) {
+                    ns.ftpcrack(host);
+                }
+                if (ns.fileExists('relaySMTP.exe', 'home')) {
+                    ns.relaysmtp(host);
+                }
+                if (ns.fileExists('HTTPWorm.exe', 'home')) {
+                    ns.httpworm(host);
+                }
+                if (ns.fileExists('SQLInject.exe', 'home')) {
+                    ns.sqlinject(host);
+                }
+                }catch {}
+                try{
+                    ns.nuke(host);
+                    ns.tprint('Root enabled on ', host);
+                } catch {
+                    ns.tprint('Root failed on ', host);
+                }
+            }
+}
