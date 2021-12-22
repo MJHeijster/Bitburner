@@ -1,39 +1,95 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    var originServer = ns.args[0] || ns.getHostname();
-    ns.tprint("Origin server: " + originServer)
-    const targets = ns.scan();
+    var targets = ["foodnstuff",
+        "sigma-cosmetics",
+        "joesguns",
+        "nectar-net",
+        "hong-fang-tea",
+        "harakiri-sushi",
+        "neo-net",
+        "zer0",
+        "max-hardware",
+        "iron-gym",
+        "phantasy",
+        "silver-helix",
+        "omega-net",
+        "crush-fitness",
+        "johnson-ortho",
+        "the-hub",
+        "comptek",
+        "netlink",
+        "rothman-uni",
+        "catalyst",
+        "summit-uni",
+        "rho-construction",
+        "millenium-fitness",
+        "aevum-police",
+        "alpha-ent",
+        "syscore",
+        "lexo-corp",
+        "snap-fitness",
+        "global-pharm",
+        "applied-energetics",
+        "unitalife",
+        "univ-energy",
+        "nova-med",
+        "zb-def",
+        "zb-institute",
+        "vitalife",
+        "titan-labs",
+        "solaris",
+        "microdyne",
+        "helios",
+        "deltaone",
+        "icarus",
+        "zeus-med",
+        "omnia",
+        "defcomm",
+        "galactic-cyber",
+        "infocomm",
+        "taiyang-digital",
+        "stormtech",
+        "aerocorp",
+        "clarkinc",
+        "omnitek",
+        "nwo",
+        "4sigma",
+        "blade",
+        "b-and-a",
+        "ecorp",
+        "fulcrumtech",
+        "megacorp",
+        "kuai-gong",
+        "fulcrumassets",
+        "powerhouse-fitness",
+        "CSEC",
+        "avmnite-02h",
+        "I.I.I.I",
+        "run4theh111z",
+        ".",
+        "icarus"];
     var hackableTargets = []
 
     for (let i = 0; i < targets.length; i++) {
-        ns.tprint("Target: " + targets[i])
-        if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != originServer && targets[i] != "darkweb") {
-            var files = ["hack.ns", "remote-hack.ns", "kill-nuke.ns", "prepare-hack.ns"]
-            var host = targets[i];
-            await ns.scp(files, originServer, host)
-            
+        var host = targets[i];
+        if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != "darkweb") {
+
             if (ns.hasRootAccess(host)) {
-        ns.tprint("prepare-hack to: " + host)
-                    await ns.exec("prepare-hack.ns", host, 1, originServer);
-        ns.tprint("remote-hack to: " + host)
-                    await ns.exec("remote-hack.ns", host, 1, originServer);
-        ns.tprint("remote-hack done to: " + host)
-        hackableTargets.push(targets[i])
+                ns.tprint("Hackable target: " + targets[i])
+                try {
+            ns.tprint("Target: " + host)
+            var threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam('hack.ns'))
+            if (threads > 0) {
+                await ns.exec("hack.ns", host, threads, host);
+                ns.tprint("Executing hack.ns on " + host + " using " + threads + " threads")
+            }
+            else {
+                ns.tprint("Unable to hack " + host + " not enough free RAM: " + ns.getServerUsedRam(host) + "")
+                ns.toast("Unable to hack " + host + " not enough free RAM, used: " + ns.getServerUsedRam(host) + " free: " + ns.getServerMaxRam(host) + " script needed: " + ns.getScriptRam('hack.ns'))
             }
         }
-    }
-        await ns.sleep(10000) // Make sure remote-hack had the time to go through the network.
-    
-    for (let i = 0; i < hackableTargets.length; i++) {
-            var host = hackableTargets[i];
-                var threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host)) / ns.getScriptRam('hack.ns'))
-                if (threads > 0) {
-                    await ns.exec("hack.ns", host, threads, host);
-                    ns.tprint("Executing hack.ns on " + host +" using " +threads+ " threads")
-                }
-                else {
-                    ns.tprint("Unable to hack " + host +" not enough free RAM: " +ns.getServerUsedRam(host)+ "")
-                    ns.toast("Unable to hack " + host +" not enough free RAM, used: " +ns.getServerUsedRam(host)+ " free: " + ns.getServerMaxRam(host) + " script needed: " +ns.getScriptRam('hack.ns'))
-                }
+        catch { }
+            }
+        }
     }
 }

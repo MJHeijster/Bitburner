@@ -1,21 +1,90 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    var originServer = ns.args[0] || "home";
-    ns.tprint("Origin server: " + originServer)
-    const targets = ns.scan();
+    var targets = ["foodnstuff",
+        "sigma-cosmetics",
+        "joesguns",
+        "nectar-net",
+        "hong-fang-tea",
+        "harakiri-sushi",
+        "neo-net",
+        "zer0",
+        "max-hardware",
+        "iron-gym",
+        "phantasy",
+        "silver-helix",
+        "omega-net",
+        "crush-fitness",
+        "johnson-ortho",
+        "the-hub",
+        "comptek",
+        "netlink",
+        "rothman-uni",
+        "catalyst",
+        "summit-uni",
+        "rho-construction",
+        "millenium-fitness",
+        "aevum-police",
+        "alpha-ent",
+        "syscore",
+        "lexo-corp",
+        "snap-fitness",
+        "global-pharm",
+        "applied-energetics",
+        "unitalife",
+        "univ-energy",
+        "nova-med",
+        "zb-def",
+        "zb-institute",
+        "vitalife",
+        "titan-labs",
+        "solaris",
+        "microdyne",
+        "helios",
+        "deltaone",
+        "icarus",
+        "zeus-med",
+        "omnia",
+        "defcomm",
+        "galactic-cyber",
+        "infocomm",
+        "taiyang-digital",
+        "stormtech",
+        "aerocorp",
+        "clarkinc",
+        "omnitek",
+        "nwo",
+        "4sigma",
+        "blade",
+        "b-and-a",
+        "ecorp",
+        "fulcrumtech",
+        "megacorp",
+        "kuai-gong",
+        "fulcrumassets",
+        "powerhouse-fitness",
+        "CSEC",
+        "avmnite-02h",
+        "I.I.I.I",
+        "run4theh111z",
+        ".",
+        "icarus"]
+    var hackableTargets = []
 
     for (let i = 0; i < targets.length; i++) {
-        ns.tprint("Target: " + targets[i])
-        if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != originServer && targets[i] != "darkweb") {
+        if (targets[i] != "home" && targets[i] != "moonraven" && targets[i] != "darkweb") {
+            ns.tprint("Target: " + targets[i])
+            try {
             var files = ["hack.ns", "remote-hack.ns", "kill-nuke.ns", "prepare-hack.ns"]
-            await ns.scp(files, originServer, host)
+            await ns.scp(files, "home", host)
             var host = targets[i];
-            await ns.exec("kill-nuke.ns", originServer, 1, host);
-            await ns.sleep(200)
+            await ns.exec("kill-nuke.ns", "home", 1, host);
+            await ns.sleep(20)
             if (ns.hasRootAccess(host)) {
-                ns.tprint("Executing remote-hack on: " + host + " threads: " + 1 + " Origin: " + originServer)
-                await ns.exec("prepare-hack.ns", host, 1, originServer);
+                hackableTargets.push(targets[i])
             }
+            }
+            catch{}
         }
     }
+    ns.tprint(hackableTargets)
 }

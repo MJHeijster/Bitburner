@@ -23,6 +23,7 @@ export async function main(ns) {
                 }catch {}
                 try{
                     ns.nuke(host);
+                    ns.installBackdoor();
                     ns.tprint('Root enabled on ', host);
                 } catch {
                     ns.tprint('Root failed on ', host);
