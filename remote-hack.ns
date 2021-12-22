@@ -1,6 +1,6 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-    var originServer = ns.args[0] || "home";
+    var originServer = ns.args[0] || ns.getHostname();
     ns.tprint("Origin server: " + originServer)
     const targets = ns.scan();
     var hackableTargets = []

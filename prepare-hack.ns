@@ -11,7 +11,7 @@ export async function main(ns) {
             await ns.scp(files, originServer, host)
             var host = targets[i];
             await ns.exec("kill-nuke.ns", originServer, 1, host);
-            await sleep(200)
+            await ns.sleep(200)
             if (ns.hasRootAccess(host)) {
                 ns.tprint("Executing remote-hack on: " + host + " threads: " + 1 + " Origin: " + originServer)
                 await ns.exec("prepare-hack.ns", host, 1, originServer);

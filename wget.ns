@@ -1,0 +1,6 @@
+wget("https://raw.githubusercontent.com/MJHeijster/Bitburner/master/remote-hack.ns", "remote-hack.ns")
+wget("https://raw.githubusercontent.com/MJHeijster/Bitburner/master/hack.ns", "hack.ns")
+wget("https://raw.githubusercontent.com/MJHeijster/Bitburner/master/local-hack.ns", "local-hack.ns")
+wget("https://raw.githubusercontent.com/MJHeijster/Bitburner/master/kill-nuke.ns", "kill-nuke.ns")
+wget("https://raw.githubusercontent.com/MJHeijster/Bitburner/master/prepare-hack.ns", "prepare-hack.ns")
+wget("https://raw.githubusercontent.com/MJHeijster/Bitburner/master/hacknet.ns", "hacknet.ns")
